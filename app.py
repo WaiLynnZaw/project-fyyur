@@ -56,33 +56,27 @@ def index():
 #  ----------------------------------------------------------------
 @app.route('/venues')
 def venues():
-    venues = Venue.query.order_by(Venue.city, Venue.state).all()
+    venues = Venue.query.order_by(Venue.city).all()
     data = []
-    current_city = None
-    current_state = None
-    venue_group = {}
-
-    for v in venues:
-        venue = {
-            'id': v.id,
-            'name': v.name,
-            'num_upcoming_shows': 0
-        }
-        if v.city == current_city and v.state == current_state:
-            venue_group['venues'].append(venue)
-        else:
-            if current_city is not None:
-                data.append(venue_group)
-
-            venue_group['city'] = v.city
-            venue_group['state'] = v.state
-            venue_group['venues'] = [venue]
-        current_city = v.city
-        current_state = v.state
-
-    data.append(venue_group)
+    venue_group = set()
+    for venue in venues:
+        venue_group.add((venue.city, venue.state)) 
+    for (city, state) in venue_group:
+        venue_array = []
+        for venue in venues:
+            if (venue.city == city) and (venue.state == state):
+              upcoming = list(filter(lambda show: show.start_time >= datetime.today(), venue.venue_shows))
+              venue_array.append({
+                  "id": venue.id,
+                  "name": venue.name,
+                  "num_upcoming_shows": len(upcoming)
+              })
+        data.append({
+            "city": city,
+            "state": state,
+            "venues": venue_array
+        })
     return render_template('pages/venues.html', areas=data)
-
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
