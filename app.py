@@ -54,7 +54,6 @@ def index():
 
 #  Venues
 #  ----------------------------------------------------------------
-
 @app.route('/venues')
 def venues():
     venues = Venue.query.order_by(Venue.city, Venue.state).all()
@@ -240,8 +239,6 @@ def edit_venue_submission(venue_id):
 
 #  Artists
 #  ----------------------------------------------------------------
-
-
 @app.route('/artists')
 def artists():
     data = [artist.get_artist_list() for artist in Artist.query.all()]
@@ -280,10 +277,6 @@ def show_artist(artist_id):
     data['past_shows_count'] = len(past)
     data['upcoming_shows_count'] = len(upcoming)
     return render_template('pages/show_artist.html', artist=data)
-
-#  Update
-#  ----------------------------------------------------------------
-
 
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
