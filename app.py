@@ -144,7 +144,7 @@ def create_venue_submission():
         generes_array = request.form.getlist('genres')
         venue.genres = ','.join(generes_array)
         venue.website = request.form['website_link']
-        if request.form['seeking_talent'] is 'y':
+        if request.form.get('seeking_talent') or 'n' == 'y':
             venue.seeking_talent = True
         else:
             venue.seeking_talent = False
@@ -209,7 +209,7 @@ def edit_venue_submission(venue_id):
         venue.website = request.form['website_link']
         venue.facebook_link = request.form['facebook_link']
         venue.image_link = request.form['image_link']
-        if request.form['seeking_talent'] is 'y':
+        if request.form.get('seeking_talent') or 'n' == 'y':
             venue.seeking_talent = True
         else:
             venue.seeking_talent = False
@@ -293,7 +293,7 @@ def edit_artist_submission(artist_id):
         artist.website = request.form['website_link']
         artist.image_link = request.form['image_link']
         artist.facebook_link = request.form['facebook_link']
-        if request.form['seeking_venue'] is 'y':
+        if request.form.get('seeking_venue') or 'n' == 'y':
             artist.seeking_venue = True
         else:
             artist.seeking_venue = False
@@ -337,6 +337,10 @@ def create_artist_submission():
         generes_array = request.form.getlist('genres')
         artist.genres = ','.join(generes_array)
         artist.website = request.form['website_link']
+        if request.form.get('seeking_venue') or 'n' == 'y':
+            artist.seeking_venue = True
+        else:
+            artist.seeking_venue = False
         artist.seeking_description = request.form['seeking_description']
         db.session.add(artist)
         db.session.commit()
